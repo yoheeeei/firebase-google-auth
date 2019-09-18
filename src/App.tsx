@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import firebase from "./modules/firebase";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface Props {}
+
+interface State {
+  user: firebase.User | null;
+}
+
+class App extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      user: null
+    };
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({ user });
+    });
+  }
+
+  login() {
+    const propvider = new firebase.auth.GoogleAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(propvider)
+      .then(result => {
+        alert("login success");
+      });
+  }
+
+  logout() {
+    firebase.auth().signOut();
+  }
+
+  render() {
+    const { user } = this.state;
+
+    return (
+      <div>
+        <p>UID: {user ? user && user.uid : ""}</p>
+        {user ? (
+          <button onClick={this.logout}>Logout</button>
+        ) : (
+          <button onClick={this.login}>Login</button>
+        )}
+      </div>
+    );
+  }
 }
 
 export default App;
