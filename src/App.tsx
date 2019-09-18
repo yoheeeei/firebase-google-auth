@@ -1,14 +1,14 @@
 import React from "react";
 import firebase from "./modules/firebase";
 
-interface Props {}
+interface IProps {}
 
-interface State {
+interface IState {
   user: firebase.User | null;
 }
 
-class App extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
+class App extends React.PureComponent<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       user: null
